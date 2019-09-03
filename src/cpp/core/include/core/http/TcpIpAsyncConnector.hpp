@@ -54,7 +54,8 @@ public:
 public:
    TcpIpAsyncConnector(boost::asio::io_service& ioService,
                        boost::asio::ip::tcp::socket* pSocket)
-     : pSocket_(pSocket),
+     : service_(ioService),
+       pSocket_(pSocket),
        resolver_(ioService),
        isConnected_(false),
        hasFailed_(false)
@@ -77,7 +78,7 @@ public:
       {
          // start a timer that will cancel any outstanding asynchronous operations
          // when it elapses if the connection operation has not succeeded
-         pConnectionTimer_.reset(new boost::asio::deadline_timer(resolver_.get_io_service(), timeout));
+         pConnectionTimer_.reset(new boost::asio::deadline_timer(service_, timeout));
          pConnectionTimer_->async_wait(boost::bind(&TcpIpAsyncConnector::onConnectionTimeout,
                                                    TcpIpAsyncConnector::shared_from_this(),
                                                    boost::asio::placeholders::error));
@@ -232,6 +233,7 @@ private:
    }
 
 private:
+   boost::asio::io_service& service_;
    boost::asio::ip::tcp::socket* pSocket_;
    boost::asio::ip::tcp::resolver resolver_;
    ConnectedHandler connectedHandler_;

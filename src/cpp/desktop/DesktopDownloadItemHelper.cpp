@@ -38,9 +38,6 @@ DownloadHelper::DownloadHelper(QWebEngineDownloadItem* item)
    connect(item, &QWebEngineDownloadItem::finished,
            this, &DownloadHelper::onFinished);
    
-   connect(item, &QWebEngineDownloadItem::isPausedChanged,
-           this, &DownloadHelper::onPausedChanged);
-   
    connect(item, &QWebEngineDownloadItem::stateChanged,
            this, &DownloadHelper::onStateChanged);
 }
@@ -52,10 +49,6 @@ void DownloadHelper::onDownloadProgress(qint64 bytesReceived, qint64 bytesTotal)
 void DownloadHelper::onFinished()
 {
    deleteLater();
-}
-
-void DownloadHelper::onPausedChanged(bool isPaused)
-{
 }
 
 void DownloadHelper::onStateChanged(QWebEngineDownloadItem::DownloadState state)

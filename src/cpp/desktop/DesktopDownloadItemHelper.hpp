@@ -38,7 +38,6 @@ public:
 public Q_SLOTS:
    void onDownloadProgress(qint64 bytesReceived, qint64 bytesTotal);
    void onFinished();
-   void onPausedChanged(bool isPaused);
    void onStateChanged(QWebEngineDownloadItem::DownloadState state);
    
 private:

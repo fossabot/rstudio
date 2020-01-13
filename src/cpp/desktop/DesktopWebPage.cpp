@@ -18,6 +18,7 @@
 #include <boost/algorithm/string.hpp>
 
 #include <core/Thread.hpp>
+#include <mutex>
 
 #include <QFileDialog>
 #include <QWebEngineSettings>

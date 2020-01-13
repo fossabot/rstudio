@@ -20,7 +20,8 @@
 
 #include <boost/algorithm/string.hpp>
 
-#include <QThread>
+#include <thread>
+#include <memory>
 
 #include <core/Algorithm.hpp>
 #include <core/SafeConvert.hpp>
@@ -47,7 +48,7 @@ namespace {
 
 #ifndef Q_OS_MAC
 std::atomic<bool> s_abortRequested(false);
-QThread* s_fontDatabaseWorker = nullptr;
+std::thread s_fontDatabaseWorker;
 #endif
 
 QString s_platform             = kUnknown;
@@ -132,8 +133,7 @@ void buildFontDatabase()
 
 #endif
 
-   s_fontDatabaseWorker = QThread::create(buildFontDatabaseImpl);
-   s_fontDatabaseWorker->start();
+   s_fontDatabaseWorker = std::thread(buildFontDatabaseImpl);
 }
 
 #else
@@ -231,10 +231,10 @@ void initialize()
 void DesktopInfo::onClose()
 {
 #ifndef Q_OS_MAC
-   if (s_fontDatabaseWorker && s_fontDatabaseWorker->isRunning())
+   if (s_fontDatabaseWorker.joinable())
    {
       s_abortRequested = true;
-      s_fontDatabaseWorker->wait(1000);
+      s_fontDatabaseWorker.join();
    }
 #endif
 }

@@ -22,11 +22,26 @@ add_subdirectory(workers)
 if(NOT EXISTS "${RSTUDIO_DEPENDENCIES_DIR}/common/dictionaries")
   message(FATAL_ERROR "Dictionaries not found (re-run install-dependencies script to install)")
 endif()
-if(NOT EXISTS "${RSTUDIO_DEPENDENCIES_DIR}/common/mathjax-26")
-  message(FATAL_ERROR "Mathjax 2.6 not found (re-run install-dependencies script to install)")
+
+find_file(MATHJAX_JS_LOCATION
+   NAMES MathJax.js
+   PATHS "${RSTUDIO_DEPENDENCIES_DIR}/common/mathjax-26" /usr/share/javascript/mathjax/)
+if("${MATHJAX_JS_LOCATION}" STREQUAL "MATHJAX_JS_LOCATION-NOTFOUND")
+  message(FATAL_ERROR "Mathjax 2.7 not found (re-run install-dependencies script to install)")
 endif()
-if(NOT EXISTS "${RSTUDIO_DEPENDENCIES_DIR}/common/pandoc")
-  message(FATAL_ERROR "pandoc not found (re-run install-dependencies script to install)")
+get_filename_component(MATHJAX_PATH ${MATHJAX_JS_LOCATION} DIRECTORY)
+
+find_program(PANDOC_BIN_LOCATION
+   NAMES pandoc
+   LOCATION "${RSTUDIO_DEPENDENCIES_DIR}/common/pandoc/" /usr/bin/)
+find_program(PANDOC_CITEPROC_BIN_LOCATION
+   NAMES pandoc-citeproc
+   LOCATION "${RSTUDIO_DEPENDENCIES_DIR}/common/pandoc/" /usr/bin/)
+if(
+      "${PANDOC_BIN_LOCATION}" STREQUAL "PANDOC_BIN_LOCATION-NOTFOUND"
+      OR
+      "${PANDOC_CITEPROC_BIN_LOCATION}" STREQUAL "PANDOC_CITEPROC_BIN_LOCATION-NOTFOUND")
+   message(FATAL_ERROR "pandoc not found (re-run install-dependencies script to install)")
 endif()
 
 # we often install embedded versions of these packages but don't do so currently
@@ -483,7 +498,7 @@ if (NOT RSTUDIO_SESSION_WIN32)
            DESTINATION "${RSTUDIO_INSTALL_SUPPORTING}/resources")
 
    # install mathjax for local html preview
-   install(DIRECTORY "${RSTUDIO_DEPENDENCIES_DIR}/common/mathjax-26"
+   install(DIRECTORY "${MATHJAX_PATH}"
            DESTINATION "${RSTUDIO_INSTALL_SUPPORTING}/resources")
 
    # icons for database connections
@@ -491,14 +506,7 @@ if (NOT RSTUDIO_SESSION_WIN32)
            DESTINATION ${RSTUDIO_INSTALL_SUPPORTING}/resources)
 
    # install pandoc
-   if(WIN32)
-      set(PANDOC_VERSION "2.7.2" CACHE INTERNAL "Pandoc version")
-   else()
-      set(PANDOC_VERSION "2.3.1" CACHE INTERNAL "Pandoc version")
-   endif()
-
-   set(PANDOC_BIN "${RSTUDIO_DEPENDENCIES_DIR}/common/pandoc/${PANDOC_VERSION}")
-   file(GLOB PANDOC_FILES "${PANDOC_BIN}/pandoc*")
+   set(PANDOC_FILES ${PANDOC_CITEPROC_BIN_LOCATION} ${PANDOC_BIN_LOCATION})
    install(FILES ${PANDOC_FILES}
            PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
            DESTINATION  ${RSTUDIO_INSTALL_BIN}/pandoc)

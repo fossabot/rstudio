@@ -497,19 +497,9 @@ if (NOT RSTUDIO_SESSION_WIN32)
    install(DIRECTORY "${RSTUDIO_DEPENDENCIES_DIR}/common/dictionaries"
            DESTINATION "${RSTUDIO_INSTALL_SUPPORTING}/resources")
 
-   # install mathjax for local html preview
-   install(DIRECTORY "${MATHJAX_PATH}"
-           DESTINATION "${RSTUDIO_INSTALL_SUPPORTING}/resources")
-
    # icons for database connections
    install(DIRECTORY "resources/connections"
            DESTINATION ${RSTUDIO_INSTALL_SUPPORTING}/resources)
-
-   # install pandoc
-   set(PANDOC_FILES ${PANDOC_CITEPROC_BIN_LOCATION} ${PANDOC_BIN_LOCATION})
-   install(FILES ${PANDOC_FILES}
-           PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
-           DESTINATION  ${RSTUDIO_INSTALL_BIN}/pandoc)
 
    # install rmarkdown package
    # file(GLOB RMARKDOWN_PACKAGE "${RSTUDIO_DEPENDENCIES_DIR}/common/rmarkdown*.tar.gz")

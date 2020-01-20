@@ -1,3 +1,5 @@
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fdcermak%2Frstudio.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fdcermak%2Frstudio?ref=badge_shield)
+
 RStudio
 =============================================================================
 
@@ -44,3 +46,7 @@ See also the following files included with the distribution:
 If you have problems or want to share feedback with us please visit our
 [community forum](https://community.rstudio.com/c/rstudio-ide). For other
 inquiries you can also email us at [info@rstudio.com](mailto:info@rstudio.com). 
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fdcermak%2Frstudio.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fdcermak%2Frstudio?ref=badge_large)
